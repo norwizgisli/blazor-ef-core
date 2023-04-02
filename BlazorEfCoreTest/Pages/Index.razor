@@ -1,0 +1,65 @@
+﻿@page "/"
+@using BlazorEfCoreTest.Services;
+@inject TodoService _todoService
+<PageTitle>Index</PageTitle>
+
+<table>
+    <thead>
+        <tr>
+            <th>
+                Description
+            </th>
+            <th>Resolved</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in items)
+        {
+            <tr>
+                <td>
+                    @item.Description
+                </td>
+                <td>
+                    @(item.Resolved ? "Yes" : "No")
+                </td>
+                <td>
+                    <button class="btn btn-primary" @onclick="() => Resolve(item)">Resolve</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <EditForm Model=@request OnSubmit="OnSave">
+        <InputText id="description" @bind-Value="request.Description"></InputText>
+        <button type="submit">Add new item</button>
+    </EditForm>
+</table>
+
+
+@code {
+    public List<TodoItem> items = new List<TodoItem>();
+    AddTodoItemRequest request = new AddTodoItemRequest();
+    protected override async Task OnInitializedAsync()
+    {
+        items = await _todoService.GetItems();
+    }
+
+    async Task Resolve(TodoItem item)
+    {
+        await _todoService.UpdateItem(item);
+        StateHasChanged();
+    }
+
+    async Task OnSave()
+    {
+        var newItem = new TodoItem()
+        {
+            Description = request.Description
+        };
+
+        request = new AddTodoItemRequest();
+
+       await _todoService.AddItem(newItem);
+        StateHasChanged();
+    }
+}
