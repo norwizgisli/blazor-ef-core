@@ -29,15 +29,15 @@
             </tr>
         }
     </tbody>
-    <EditForm Model=@request OnSubmit="OnSave">
-        <InputText id="description" @bind-Value="request.Description"></InputText>
-        <button type="submit">Add new item</button>
-    </EditForm>
+   
 </table>
 
-
+<EditForm Model=@request OnSubmit="OnSave">
+    <InputText id="description" @bind-Value="request.Description"></InputText>
+    <button type="submit">Add new item</button>
+</EditForm>
 @code {
-    public List<TodoItem> items = new List<TodoItem>();
+    List<TodoItem> items = new List<TodoItem>();
     AddTodoItemRequest request = new AddTodoItemRequest();
     protected override async Task OnInitializedAsync()
     {
@@ -47,6 +47,7 @@
     async Task Resolve(TodoItem item)
     {
         await _todoService.UpdateItem(item);
+        items = await _todoService.GetItems();
         StateHasChanged();
     }
 
@@ -60,6 +61,7 @@
         request = new AddTodoItemRequest();
 
        await _todoService.AddItem(newItem);
+        items = await _todoService.GetItems();
         StateHasChanged();
     }
 }
