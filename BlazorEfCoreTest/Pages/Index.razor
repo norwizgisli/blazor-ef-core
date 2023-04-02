@@ -24,7 +24,7 @@
                     @(item.Resolved ? "Yes" : "No")
                 </td>
                 <td>
-                    <button class="btn btn-primary" @onclick="() => Resolve(item)">Resolve</button>
+                    <button class="btn btn-primary" @onclick="() => Resolve(item)">Toggle resolve</button>
                     <button class="btn btn-danger" @onclick="() => Delete(item)">Remove</button>
                 </td>
             </tr>
@@ -47,7 +47,7 @@
 
     async Task Resolve(TodoItem item)
     {
-        item.Resolved = true;
+        item.Resolved = !item.Resolved;
         await _todoService.UpdateItem(item);
         items = await _todoService.GetItems();
         StateHasChanged();
