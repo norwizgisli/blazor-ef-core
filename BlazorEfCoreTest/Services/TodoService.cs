@@ -28,6 +28,14 @@ namespace BlazorEfCoreTest.Services
             await context.SaveChangesAsync();
         }
 
+        public async Task RemoveItem(TodoItem item)
+        {
+            using var context = await _factory.CreateDbContextAsync();
+
+            context.TodoItem.Remove(item);
+            await context.SaveChangesAsync();
+        }
+
         public async Task UpdateItem(TodoItem item)
         {
             using var context = await _factory.CreateDbContextAsync();
